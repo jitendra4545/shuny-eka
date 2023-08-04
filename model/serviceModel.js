@@ -3,7 +3,7 @@ const { default: mongoose, model } = require("mongoose");
 
 const ServiceSchema=mongoose.Schema({
 first_name:{type:String,required:true},
-last_name:{type:String,required:true},
+
 father_name:{type:String,required:true},
 mobile:{type:Number,required:true},
 address:{type:String,required:true},
