@@ -10,6 +10,10 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 
+app.get("/",(req,res)=>{
+ res.send("wel come to service website")   
+})
+
 
 app.get("/users", async (req, res) => {
     try {
