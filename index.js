@@ -6,14 +6,42 @@ const cors = require('cors')
 const { UserModel } = require('./model/userModel')
 const { connection } = require('./config/db')
 const { serviceRouter } = require('./routes/serviceRoute')
-
+const jwt=require('jsonwebtoken')
+const { UserDataModel } = require('./model/UserLoginModel')
 const app = express()
 app.use(express.json())
 app.use(cors())
 app.use("/service",serviceRouter)
-app.get("/", (req, res) => {
-    res.send("wel come to service website")
-})
+app.get("/", async (req, res) => {
+    try {
+      let allData = await UserDataModel.find()
+      res.send(allData)
+    } catch (err) {
+      res.send({ "msg": "somthing went wrong! cannot get data", "error": err.message })
+    }
+  })
+
+  app.post("/adduser", async (req, res) => {
+    let userData = req.body
+  
+    try {
+      let newUser = new UserModel(userData)
+      if (userData.name != "" && userData.email != "") {
+        await newUser.save()
+        jwt.sign({ jitendra: 'ghadei' }, userData.email, async function (err, token) {
+          console.log(token);
+          res.send({ "msg": "Login Successfull", "token": token })
+        })
+  
+      } else {
+        console.log({ "msg": "somthing went wrong! cannot generate token" })
+      }
+    } catch (err) {
+      res.send({ "msg": "somthing went wrong! cannot add", "error": err.message })
+    }
+  })
+  
+
 
 
 app.get("/users", async (req, res) => {
